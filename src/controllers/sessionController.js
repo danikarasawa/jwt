@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const authConfig = require ('../config/auth');
+const authConfig = require('../config/auth');
 const alunas = require("../model/alunas.json");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 function checkPassword(passwordEntry, password) {
   return bcrypt.compareSync(passwordEntry, password);
@@ -10,12 +10,12 @@ function checkPassword(passwordEntry, password) {
 exports.accessToken = (req, res) => {
   const { name, password: passwordEntry } = req.body;
   const user = alunas.find(e => e.nome == name)
-  
+
   if (!user) {
     return res.status(401).json({ error: 'user not found' });
   }
 
-  const {id, nome, hashPass } = user;
+  const { id, nome, hashPass } = user;
 
   try {
     checkPassword(passwordEntry, hashPass);
